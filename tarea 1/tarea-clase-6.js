@@ -6,49 +6,54 @@ Al hacer click en "calcular", mostrar en un elemento pre-existente la mayor edad
 Punto bonus: Crear un botón para "empezar de nuevo" que empiece el proceso nuevamente, borrando los inputs ya creados (investigar cómo en MDN).
 */
 const botonAceptar = document.querySelector("#boton-aceptar");
+const body = document.querySelector("body");
 
 botonAceptar.onclick = function () {
     let numeroFamiliares = Number(
         document.querySelector("#numero-familia").value
     );
-    const body = document.querySelector("body");
+
+    if (
+        document.querySelector("#numero-familia").value === "" ||
+        document.querySelector("#numero-familia").value === "0"
+    ) {
+        return;
+    }
 
     for (i = 1; i <= numeroFamiliares; i++) {
-        let labelFamilia = document.createElement("label");
-        labelFamilia.innerText = "Familiar " + i;
-        labelFamilia.setAttribute("class", "label");
-        body.appendChild(labelFamilia);
-        let inputFamilia = document.createElement("input");
-        inputFamilia.placeholder = "Ingrese la edad";
-        inputFamilia.type = "number";
-        inputFamilia.setAttribute("class", "edad");
-        body.appendChild(inputFamilia);
-        edadesFamiliares = document.querySelectorAll(".edad");
+        crearLabels();
+        crearInputs();
     }
+
     let divison = document.createElement("div");
-    document.querySelector("body").appendChild(divison);
-    const botonCalcular = document.createElement("input");
+    body.appendChild(divison);
+
+    let botonCalcular = document.createElement("input");
+    body.appendChild(botonCalcular);
     botonCalcular.value = "Calcular";
     botonCalcular.id = "boton-calcular";
     botonCalcular.type = "button";
-    document.querySelector("body").appendChild(botonCalcular);
+
     let mayorEdad = document.createElement("input");
-    mayorEdad.placeholder = "Mayor edad";
+    body.appendChild(mayorEdad);
     mayorEdad.disabled = true;
     mayorEdad.setAttribute("class", "edades");
-    document.querySelector("body").appendChild(mayorEdad);
+    mayorEdad.placeholder = "Mayor edad";
+
     let menorEdad = document.createElement("input");
     menorEdad.placeholder = "Menor edad";
     menorEdad.disabled = true;
     menorEdad.setAttribute("class", "edades");
-    document.querySelector("body").appendChild(menorEdad);
+    body.appendChild(menorEdad);
+
     let promedioEdad = document.createElement("input");
     promedioEdad.placeholder = "Promedio edad";
     promedioEdad.disabled = true;
     promedioEdad.setAttribute("class", "edades");
-    document.querySelector("body").appendChild(promedioEdad);
+    body.appendChild(promedioEdad);
 
     botonCalcular.onclick = function () {
+        botonCalcular.disabled = true;
         const edadesFamiliares = document.querySelectorAll(".edad");
         mayorEdad.value = edadesFamiliares[0].value;
         menorEdad.value = edadesFamiliares[0].value;
@@ -84,6 +89,21 @@ botonAceptar.onclick = function () {
         };
     };
 };
+
+function crearLabels() {
+    let labelFamilia = document.createElement("label");
+    labelFamilia.innerText = "Familiar " + i;
+    labelFamilia.setAttribute("class", "label");
+    body.appendChild(labelFamilia);
+}
+
+function crearInputs() {
+    let inputFamilia = document.createElement("input");
+    inputFamilia.placeholder = "Ingrese la edad";
+    inputFamilia.type = "number";
+    inputFamilia.setAttribute("class", "edad");
+    body.appendChild(inputFamilia);
+}
 
 /*
 TAREA:
