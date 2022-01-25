@@ -13,12 +13,13 @@ const $botonResetear = document.querySelector("#boton-resetear");
 const $botonSalarios = document.querySelector("#boton-agregar-salarios");
 const $botonCalcularSalarios = document.querySelector("#calcular-salarios");
 const $botonQuitarSalarios = document.querySelector("#quitar-salarios");
+const $listaEdades = document.querySelectorAll(".familiar");
 
 $botonAceptar.onclick = function () {
     resetear();
     crearFamiliares();
     if ($numeroFamiliares.value > 0) {
-        mostrarBotonCalcular();
+        mostrarElemento($botonCalcular);
     }
 };
 
@@ -27,12 +28,16 @@ $botonCalcular.onclick = function () {
     if ($listaFamiliares.length === 0) {
         return;
     }
-    document.querySelector("#mayor-edad").value = calcularMayorEdad();
-    document.querySelector("#menor-edad").value = calcularMenorEdad();
-    document.querySelector("#promedio-edad").value = calcularPromedioEdad();
-    mostrarListaCalculos();
-    mostrarBotonResetear();
-    mostrarBotonAgregar();
+    let listaEdades = Array.from($listaFamiliares);
+    document.querySelector("#mayor-edad").value =
+        calcularMayorEdad(listaEdades);
+    document.querySelector("#menor-edad").value =
+        calcularMenorEdad(listaEdades);
+    document.querySelector("#promedio-edad").value =
+        calcularPromedioEdad(listaEdades);
+    mostrarElemento(document.querySelector("#calculos"));
+    mostrarElemento($botonResetear);
+    mostrarElemento(document.querySelector("#boton-agregar-salarios"));
 };
 
 $botonResetear.onclick = function () {
@@ -49,16 +54,20 @@ Punto bonus: si hay inputs vacíos, ignorarlos en el cálculo (no contarlos como
 
 $botonSalarios.onclick = function () {
     agregarSalarios();
-    mostrarCalcularSalarios();
+    mostrarElemento(document.querySelector("#calcular-salarios"));
 };
 
 $botonCalcularSalarios.onclick = function () {
-    mostrarListaSalarios();
-    document.querySelector("#mayor-salario").value = calcularMayorSalario();
-    document.querySelector("#menor-salario").value = calcularMenorSalario();
+    let $listaSalarios = document.querySelectorAll(".familiar-salario");
+    let listaSalarios = Array.from($listaSalarios);
+    mostrarElemento(document.querySelector("#calculos-salarios"));
+    document.querySelector("#mayor-salario").value =
+        calcularMayorSalario(listaSalarios);
+    document.querySelector("#menor-salario").value =
+        calcularMenorSalario(listaSalarios);
     document.querySelector("#promedio-salario").value =
-        calcularPromedioSalario();
-    mostrarBotonQuitar();
+        calcularPromedioSalario(listaSalarios);
+    mostrarElemento($botonQuitarSalarios);
 };
 
 $botonQuitarSalarios.onclick = function () {
@@ -66,9 +75,9 @@ $botonQuitarSalarios.onclick = function () {
         document.querySelectorAll(".familiar-salario")[i].remove();
         document.querySelectorAll(".label-salario")[i].remove();
     }
-    ocultarCalcularSalarios();
-    ocultarListaSalarios();
-    ocultarBotonQuitar();
+    ocultarElemento(document.querySelector("#calcular-salarios"));
+    ocultarElemento(document.querySelector("#calculos-salarios"));
+    ocultarElemento($botonQuitarSalarios);
 };
 
 //
@@ -78,6 +87,14 @@ $botonQuitarSalarios.onclick = function () {
 //
 //
 //
+
+function mostrarElemento(Element) {
+    Element.className = "";
+}
+
+function ocultarElemento(Element) {
+    Element.className = "oculto";
+}
 
 function resetear() {
     if (document.querySelectorAll(".familiar").length > 0) {
@@ -96,41 +113,13 @@ function resetear() {
             document.querySelectorAll(".label-salario")[i].remove();
         }
     }
-    ocultarListaCalculos();
-    ocultarBotonResetear();
-    ocultarBotonAgregar();
-    ocultarBotonCalcular();
-    ocultarCalcularSalarios();
-    ocultarBotonQuitar();
-    ocultarListaSalarios();
-}
-
-function ocultarListaCalculos() {
-    document.querySelector("#calculos").className = "oculto";
-}
-
-function ocultarBotonResetear() {
-    document.querySelector("#boton-resetear").className = "oculto";
-}
-
-function ocultarBotonAgregar() {
-    document.querySelector("#boton-agregar-salarios").className = "oculto";
-}
-
-function ocultarBotonCalcular() {
-    document.querySelector("#boton-calcular").className = "oculto";
-}
-
-function ocultarCalcularSalarios() {
-    document.querySelector("#calcular-salarios").className = "oculto";
-}
-
-function ocultarBotonQuitar() {
-    document.querySelector("#quitar-salarios").className = "oculto";
-}
-
-function ocultarListaSalarios() {
-    document.querySelector("#calculos-salarios").className = "oculto";
+    ocultarElemento(document.querySelector("#calculos"));
+    ocultarElemento($botonResetear);
+    ocultarElemento($botonSalarios);
+    ocultarElemento($botonCalcular);
+    ocultarElemento($botonCalcularSalarios);
+    ocultarElemento($botonQuitarSalarios);
+    ocultarElemento(document.querySelector("#calculos-salarios"));
 }
 
 function crearFamiliares() {
@@ -149,52 +138,33 @@ function crearFamiliares() {
     }
 }
 
-function mostrarBotonCalcular() {
-    document.querySelector("#boton-calcular").className = "";
-}
-
-function calcularMayorEdad() {
-    let $listaFamiliares = document.querySelectorAll(".familiar");
+function calcularMayorEdad(array) {
     let mayorEdad = 0;
-    for (i = 0; i < $listaFamiliares.length; i++) {
-        if (mayorEdad < $listaFamiliares[i].value) {
-            mayorEdad = $listaFamiliares[i].value;
+    for (i = 0; i < array.length; i++) {
+        if (mayorEdad < array[i].value) {
+            mayorEdad = array[i].value;
         }
     }
     return mayorEdad;
 }
 
-function calcularMenorEdad() {
-    let $listaFamiliares = document.querySelectorAll(".familiar");
-    let menorEdad = $listaFamiliares[0];
-    for (i = 0; i < $listaFamiliares.length; i++) {
-        if (menorEdad > $listaFamiliares[i].value) {
-            menorEdad = $listaFamiliares[i].value;
+function calcularMenorEdad(array) {
+    let menorEdad = array[0];
+    for (i = 0; i < array.length; i++) {
+        if (menorEdad > array[i].value) {
+            menorEdad = array[i].value;
         }
     }
     return menorEdad;
 }
 
-function calcularPromedioEdad() {
-    let $listaFamiliares = document.querySelectorAll(".familiar");
+function calcularPromedioEdad(array) {
     let totalEdades = 0;
-    for (i = 0; i < $listaFamiliares.length; i++) {
-        totalEdades += Number($listaFamiliares[i].value);
+    for (i = 0; i < array.length; i++) {
+        totalEdades += Number(array[i].value);
     }
-    promedioEdad = totalEdades / $listaFamiliares.length;
+    promedioEdad = totalEdades / array.length;
     return promedioEdad;
-}
-
-function mostrarListaCalculos() {
-    document.querySelector("#calculos").className = "";
-}
-
-function mostrarBotonResetear() {
-    document.querySelector("#boton-resetear").className = "";
-}
-
-function mostrarBotonAgregar() {
-    document.querySelector("#boton-agregar-salarios").className = "";
 }
 
 function agregarSalarios() {
@@ -213,52 +183,37 @@ function agregarSalarios() {
     }
 }
 
-function mostrarCalcularSalarios() {
-    document.querySelector("#calcular-salarios").className = "";
-}
-
-function mostrarListaSalarios() {
-    document.querySelector("#calculos-salarios").className = "";
-}
-
-function calcularMayorSalario() {
-    let $listaSalarios = document.querySelectorAll(".familiar-salario");
+function calcularMayorSalario(array) {
     let mayorSalario = 0;
-    for (i = 0; i < $listaSalarios.length; i++) {
-        if (mayorSalario < Number($listaSalarios[i].value)) {
-            mayorSalario = Number($listaSalarios[i].value);
+    for (i = 0; i < array.length; i++) {
+        if (mayorSalario < Number(array[i].value)) {
+            mayorSalario = Number(array[i].value);
         }
     }
     return mayorSalario;
 }
 
-function calcularMenorSalario() {
-    let $listaSalarios = document.querySelectorAll(".familiar-salario");
-    let menorSalario = Number($listaSalarios[0].value);
-    for (i = 0; i < $listaSalarios.length; i++) {
-        if (Number($listaSalarios[i].value) === 0) {
+function calcularMenorSalario(array) {
+    let menorSalario = Number(array[0].value);
+    for (i = 0; i < array.length; i++) {
+        if (Number(array[i].value) === 0) {
             continue;
         }
-        if (menorSalario > Number($listaSalarios[i].value)) {
-            menorSalario = Number($listaSalarios[i].value);
+        if (menorSalario > Number(array[i].value)) {
+            menorSalario = Number(array[i].value);
         }
     }
     return menorSalario;
 }
 
-function calcularPromedioSalario() {
-    let $listaSalarios = document.querySelectorAll(".familiar-salario");
+function calcularPromedioSalario(array) {
     let totalSalarios = 0;
-    for (i = 0; i < $listaSalarios.length; i++) {
-        if ($listaSalarios[i].value === 0) {
+    for (i = 0; i < array.length; i++) {
+        if (array[i].value === 0) {
             continue;
         }
-        totalSalarios += Number($listaSalarios[i].value);
+        totalSalarios += Number(array[i].value);
     }
-    let promedioSalario = totalSalarios / $listaSalarios.length;
+    let promedioSalario = totalSalarios / array.length;
     return promedioSalario;
-}
-
-function mostrarBotonQuitar() {
-    document.querySelector("#quitar-salarios").className = "";
 }
