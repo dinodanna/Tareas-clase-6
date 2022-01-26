@@ -88,12 +88,12 @@ $botonQuitarSalarios.onclick = function () {
 //
 //
 
-function mostrarElemento(Element) {
-    Element.className = "";
+function mostrarElemento(element) {
+    element.className = "";
 }
 
-function ocultarElemento(Element) {
-    Element.className = "oculto";
+function ocultarElemento(element) {
+    element.className = "oculto";
 }
 
 function resetear() {
